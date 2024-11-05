@@ -21,7 +21,7 @@ function bootcomposer_adminpro_enqueue_assets() {
     wp_enqueue_style('bootcomposer-adminpro-style');
 
     // Register and enqueue the JS file
-    wp_register_script('bootcomposer-adminpro-script', plugin_dir_url(__FILE__) . 'js/admin-script.js', ['jquery'], null, true);
+    wp_register_script('bootcomposer-adminpro-script', plugin_dir_url(__FILE__) . 'js/admin-pro.js', ['jquery'], null, true);
     wp_enqueue_script('bootcomposer-adminpro-script');
 
     // Add inline CSS to ensure it has the highest specificity
