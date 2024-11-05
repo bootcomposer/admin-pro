@@ -1,0 +1,66 @@
+
+#--------------------------------------------------------------------------#
+#--------------------------------------------------------------------------#
+#                          BOOTCOMPOSER.ORG                                #
+#--------------------------------------------------------------------------#
+#--------------------------------------------------------------------------#
+version: "3"
+
+services:
+    bootcomposer_adminpro:
+
+      image: docker.io/wordpress
+      container_name: 'bootcomposer-adminpro'
+      ports:
+        - '8080:80'
+        - 443:443
+      environment:
+        - WORDPRESS_DB_HOST=bootcomposer_adminpro_mysql
+        - WORDPRESS_DB_PORT=3306
+        - WORDPRESS_DB_NAME=bootcomposer_adminpro
+        - WORDPRESS_DB_USER=root
+        - WORDPRESS_DB_PASSWORD=bootcomposer_adminpro
+        - WORDPRESS_TABLE_PREFIX=wp
+        - WORDPRESS_DEBUG=1
+      volumes:
+        - './wp:/var/www/html'
+        - './:/var/www/html/wp-content/plugins/admin-pro'
+      depends_on:
+        - bootcomposer_adminpro_mysql
+
+#--------------------------------------------------------------------------#
+#--------------------------------------------------------------------------#
+#                               M Y S Q L                                  #
+#--------------------------------------------------------------------------#
+#--------------------------------------------------------------------------#               
+    bootcomposer_adminpro_mysql:
+        image: mariadb:10.5.5
+        container_name: 'bootcomposer_adminpro_mysql'
+        ports:
+          - 3306:3306
+        volumes:
+          - ./database/mysql:/var/lib/mysql
+          - ./database/logs/mysql:/var/log/mysql
+        environment:
+          MYSQL_DATABASE: bootcomposer_adminpro
+          MYSQL_USER: bootcomposer_adminpro
+          MYSQL_PASSWORD: bootcomposer_adminpro
+          MYSQL_ROOT_PASSWORD: bootcomposer_adminpro
+
+#--------------------------------------------------------------------------#
+#--------------------------------------------------------------------------#
+#                         P H P M Y A D M I N                              #
+#--------------------------------------------------------------------------#
+#--------------------------------------------------------------------------#             
+    bootcomposer_adminpro_phpmyadmin:
+        image: phpmyadmin/phpmyadmin:5.0.2
+        container_name: 'bootcomposer_adminpro_phpmyadmin'
+        links:
+          - bootcomposer_adminpro_mysql
+        environment:
+          PMA_HOST: bootcomposer_adminpro_mysql
+          PMA_PORT: 3306
+        ports:
+          - 81:80
+        volumes:
+          - ./database/sessions:/sessions
